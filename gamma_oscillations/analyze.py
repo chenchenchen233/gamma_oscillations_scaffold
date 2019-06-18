@@ -73,3 +73,14 @@ def compute_spectrogram_multitaper(x, dt, step_size=1, window_size=2**13, NW=2.5
         freq_vec = freq_vec[np.where(freq_vec > freq_min)]
 
     return spectrogram, freq_vec, time_vec
+
+
+def coherence_index(spiketrain1, spiketrain2):
+    return np.sum(spiketrain1 * spiketrain2) / np.sqrt(np.sum(spiketrain1)*np.sum(spiketrain2))
+
+
+def coherence_index_pop(spiketrains):
+    coherence_indices = []
+    for i, j in itertools.combinations(range(len(spiketrains)), r=2):
+        coherence_indices.append(coherence_index(spiketrains[i], spiketrains[j]))
+    return np.mean(coherence_indices)

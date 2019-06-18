@@ -6,7 +6,8 @@ from gamma_oscillations import *
 def simulate_network(runtime, timestep, n_pyr, n_int,
                      params_pyr2int, params_pyr2pyr, params_int2pyr, params_int2int,
                      params_poisson2pyr, params_poisson2int,
-                     p_conn, poisson_rate_pyr, poisson_rate_int):
+                     p_conn_pyr2int, p_conn_pyr2pyr, p_conn_int2int, p_conn_int2pyr,
+                     poisson_rate_pyr, poisson_rate_int):
     runtime *= ms
     timestep *= ms
     network_objects = []  # objects that are needed to create the network
@@ -22,7 +23,8 @@ def simulate_network(runtime, timestep, n_pyr, n_int,
                                 syn_pyr2pyr_model, syn_poisson2pyr_model, syn_poisson2int_model)
     network_objects.extend([pyrs, ints])
 
-    syn_int2int, syn_int2pyr, syn_pyr2int, syn_pyr2pyr = create_connections(ints, pyrs, p_conn,
+    syn_int2int, syn_int2pyr, syn_pyr2int, syn_pyr2pyr = create_connections(ints, pyrs, p_conn_pyr2int, p_conn_pyr2pyr,
+                                                                            p_conn_int2int, p_conn_int2pyr,
                                                                             syn_int2int_model, syn_int2pyr_model,
                                                                             syn_pyr2int_model, syn_pyr2pyr_model)
     network_objects.extend([syn_pyr2int, syn_pyr2pyr, syn_int2int, syn_int2pyr])
@@ -76,7 +78,8 @@ def create_neurons(n_int, n_pyr, syn_int2int_model, syn_int2pyr_model, syn_pyr2i
     pass
 
 
-def create_connections(ints, pyrs, p_conn, syn_int2int_model, syn_int2pyr_model, syn_pyr2int_model, syn_pyr2pyr_model):
+def create_connections(ints, pyrs, p_conn_pyr2int, p_conn_pyr2pyr, p_conn_int2int, p_conn_int2pyr,
+                       syn_int2int_model, syn_int2pyr_model, syn_pyr2int_model, syn_pyr2pyr_model):
     '''
     Creates Synapses and connects interneuron and pyramidal cell populations.
 
@@ -84,7 +87,18 @@ def create_connections(ints, pyrs, p_conn, syn_int2int_model, syn_int2pyr_model,
     :type ints: NeuronGroup
     :param pyrs: Population of pyramidal cells.
     :type pyrs: NeuronGroup
-    :param p_conn: Probability of connecting any pair of cells from two populations.
+    :param p_conn_pyr2int: Probability ([0, 1]) of connecting any pair of cells from the pyramidal cell to the
+                           interneuron population.
+    :type p_conn_pyr2int: float
+    :param p_conn_pyr2pyr: Probability ([0, 1]) of connecting any pair of cells from from the pyramidal cell to the
+                           pyramidal cell population.
+    :type p_conn_pyr2pyr: float
+    :param p_conn_int2int: Probability ([0, 1]) of connecting any pair of cells from the interneuron to the
+                           interneuron population.
+    :type p_conn_int2int: float
+    :param p_conn_int2pyr: Probability ([0, 1]) of connecting any pair of cells from the interneuron to the
+                           pyramidal cell population.
+    :type p_conn_int2pyr: float
     :param syn_int2int_model: Manages equations and parameters of connections from interneurons to interneurons.
     :type syn_int2int_model: SynapseModel
     :param syn_int2pyr_model: Manages equations and parameters of connections from interneurons to pyramidal cells.

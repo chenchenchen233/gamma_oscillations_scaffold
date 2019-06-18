@@ -8,8 +8,11 @@ from gamma_oscillations.plots import *
 if __name__ == '__main__':
     n_pyr = 500
     n_int = 100
-    p_conn = 0.1
-    poisson_rate_pyr = 8  # kHz
+    p_conn_pyr2int = 0.1
+    p_conn_pyr2pyr = 0.1
+    p_conn_int2int = 0.1
+    p_conn_int2pyr = 0.1
+    poisson_rate_pyr = 1  # kHz
     poisson_rate_int = 1  # kHz
     runtime = 1100  # ms
     timestep = 0.05  # ms
@@ -28,7 +31,8 @@ if __name__ == '__main__':
                                                                                       params_int2pyr, params_int2int,
                                                                                       params_poisson2pyr,
                                                                                       params_poisson2int,
-                                                                                      p_conn,
+                                                                                      p_conn_pyr2int, p_conn_pyr2pyr,
+                                                                                      p_conn_int2int, p_conn_int2pyr,
                                                                                       poisson_rate_pyr, poisson_rate_int)
 
     readout = ReadOut(spike_monitor_pyr, poprate_monitor_pyr, state_monitor_pyr,
